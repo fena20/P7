@@ -1,0 +1,6 @@
+Parameter,Value,Units,Source
+Electricity (avg),0.12,$/kWh,EIA 2023
+Natural Gas (avg),1.2,$/therm,EIA 2023
+Grid CO₂ (current),0.42,kg/kWh,EPA eGRID 2022
+Grid CO₂ (2030 proj),0.3,kg/kWh,NREL projection
+Gas CO₂,5.3,kg/therm,EPA
