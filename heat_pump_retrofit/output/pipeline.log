@@ -1,0 +1,413 @@
+2025-12-11 11:53:07,127 - INFO - ======================================================================
+2025-12-11 11:53:07,128 - INFO - HEAT PUMP RETROFIT ANALYSIS PIPELINE
+2025-12-11 11:53:07,128 - INFO - Started: 2025-12-11 11:53:07
+2025-12-11 11:53:07,128 - INFO - Random Seed: 42
+2025-12-11 11:53:07,128 - INFO - ======================================================================
+2025-12-11 11:53:07,128 - INFO - 
+======================================================================
+2025-12-11 11:53:07,128 - INFO - PHASE 1: LITERATURE REVIEW
+2025-12-11 11:53:07,128 - INFO - ======================================================================
+2025-12-11 11:53:07,128 - INFO - ============================================================
+2025-12-11 11:53:07,128 - INFO - PHASE 1: PROBLEM DEFINITION AND LITERATURE REVIEW
+2025-12-11 11:53:07,128 - INFO - ============================================================
+2025-12-11 11:53:07,129 - INFO - Saved: /workspace/heat_pump_retrofit/output/documents/problem_statement.txt
+2025-12-11 11:53:07,129 - INFO - Saved: /workspace/heat_pump_retrofit/output/documents/literature_review.txt
+2025-12-11 11:53:07,129 - INFO - 
+✅ Phase 1 Complete
+2025-12-11 11:53:07,129 - INFO -    Documents saved to: /workspace/heat_pump_retrofit/output/documents
+2025-12-11 11:53:07,129 - INFO - 
+✅ Phase 1 completed in 0.0s
+2025-12-11 11:53:07,129 - INFO - 
+======================================================================
+2025-12-11 11:53:07,129 - INFO - PHASE 2: DATA COLLECTION
+2025-12-11 11:53:07,129 - INFO - ======================================================================
+2025-12-11 11:53:07,269 - INFO - ============================================================
+2025-12-11 11:53:07,269 - INFO - PHASE 2: DATA COLLECTION AND VALIDATION
+2025-12-11 11:53:07,269 - INFO - ============================================================
+2025-12-11 11:53:07,269 - INFO - Loading existing processed data: /workspace/heat_pump_retrofit/output/03_gas_heated_clean.csv
+2025-12-11 11:53:07,365 - INFO - Loaded 9,387 records
+2025-12-11 11:53:07,365 - INFO - 
+--- DATA VALIDATION ---
+2025-12-11 11:53:07,365 - INFO - Sample size: 9,387
+2025-12-11 11:53:07,365 - INFO - HDD65: mean=4693, std=2076
+2025-12-11 11:53:07,365 - INFO -   ✓ HDD mean within expected range
+2025-12-11 11:53:07,366 - INFO - Envelope distribution:
+envelope_class
+medium    0.590497
+good      0.319484
+poor      0.090018
+Name: proportion, dtype: float64
+2025-12-11 11:53:07,371 - WARNING - Missing values:
+heating_equip_age    1842
+dtype: int64
+2025-12-11 11:53:07,371 - INFO - Division counts:
+division_name
+East North Central    1474
+Middle Atlantic       1210
+Pacific               1204
+West North Central    1167
+South Atlantic        1100
+Mountain North         873
+West South Central     765
+New England            615
+Mountain South         492
+East South Central     487
+Name: count, dtype: int64
+2025-12-11 11:53:07,489 - INFO - 
+Descriptive Statistics:
+                       count           mean  ...  missing  missing_pct
+DOEID                 9387.0  109234.543731  ...        0         0.00
+NWEIGHT               9387.0    6470.584001  ...        0         0.00
+HDD65                 9387.0    4692.761479  ...        0         0.00
+CDD65                 9387.0    1309.842548  ...        0         0.00
+TYPEHUQ               9387.0       2.438479  ...        0         0.00
+...                      ...            ...  ...      ...          ...
+building_age          9387.0      42.975498  ...        0         0.00
+heating_equip_age     7545.0       9.355865  ...     1842        19.62
+log_sqft              9387.0       7.448524  ...        0         0.00
+hdd_sqft_interaction  9387.0       9.360581  ...        0         0.00
+heating_per_sqft      9387.0      27.797939  ...        0         0.00
+
+[136 rows x 10 columns]
+2025-12-11 11:53:08,088 - INFO - Saved processed data: /workspace/heat_pump_retrofit/output/03_gas_heated_clean.csv
+2025-12-11 11:53:08,089 - INFO - Saved statistics: /workspace/heat_pump_retrofit/output/descriptive_statistics.csv
+2025-12-11 11:53:08,089 - INFO - Saved validation report: /workspace/heat_pump_retrofit/output/validation_report.txt
+2025-12-11 11:53:08,089 - INFO - 
+✅ Phase 2 Complete
+2025-12-11 11:53:08,089 - INFO -    Data saved to: /workspace/heat_pump_retrofit/output/03_gas_heated_clean.csv
+2025-12-11 11:53:08,089 - INFO -    Records: 9,387
+2025-12-11 11:53:08,089 - INFO - 
+✅ Phase 2 completed in 1.0s
+2025-12-11 11:53:08,089 - INFO - 
+======================================================================
+2025-12-11 11:53:08,089 - INFO - PHASE 3: FEATURE ENGINEERING
+2025-12-11 11:53:08,089 - INFO - ======================================================================
+2025-12-11 11:53:08,091 - ERROR - 
+❌ Phase 3 failed: No module named 'sklearn'
+2025-12-11 11:53:08,091 - WARNING - Continuing to next phase...
+2025-12-11 11:53:08,091 - INFO - 
+======================================================================
+2025-12-11 11:53:08,091 - INFO - PHASE 4: MODEL TRAINING
+2025-12-11 11:53:08,091 - INFO - ======================================================================
+2025-12-11 11:53:08,093 - ERROR - 
+❌ Phase 4 failed: No module named 'sklearn'
+2025-12-11 11:53:08,093 - WARNING - Continuing to next phase...
+2025-12-11 11:53:08,093 - INFO - 
+======================================================================
+2025-12-11 11:53:08,093 - INFO - PHASE 5: SENSITIVITY ANALYSIS
+2025-12-11 11:53:08,093 - INFO - ======================================================================
+2025-12-11 11:53:08,382 - INFO - ============================================================
+2025-12-11 11:53:08,382 - INFO - PHASE 5: INTERPRETABILITY AND SENSITIVITY ANALYSIS
+2025-12-11 11:53:08,382 - INFO - ============================================================
+2025-12-11 11:53:08,382 - WARNING - No model found, creating dummy model
+2025-12-11 11:53:08,382 - ERROR - 
+❌ Phase 5 failed: [Errno 2] No such file or directory: '/workspace/heat_pump_retrofit/output/test_X.csv'
+2025-12-11 11:53:08,384 - WARNING - Continuing to next phase...
+2025-12-11 11:53:08,384 - INFO - 
+======================================================================
+2025-12-11 11:53:08,384 - INFO - PHASE 6: SCENARIO EVALUATION
+2025-12-11 11:53:08,384 - INFO - ======================================================================
+2025-12-11 11:53:08,386 - INFO - ============================================================
+2025-12-11 11:53:08,386 - INFO - PHASE 6: SCENARIO ENUMERATION AND ECONOMIC EVALUATION
+2025-12-11 11:53:08,386 - INFO - ============================================================
+2025-12-11 11:53:08,386 - INFO - Generated 324 scenarios
+2025-12-11 11:53:08,386 - INFO - Evaluating all scenarios...
+2025-12-11 11:53:08,403 - INFO - Evaluated 324 scenarios
+2025-12-11 11:53:08,403 - INFO - Viable scenarios: 72 (22.2%)
+2025-12-11 11:53:08,403 - INFO - Finding tipping points...
+2025-12-11 11:53:08,413 - INFO - 
+Tipping Points:
+  envelope_class climate_zone  ...  break_even_scenario  pct_viable
+0           Poor         Mild  ...                 None   66.666667
+1           Poor     Moderate  ...                 None   33.333333
+2           Poor         Cold  ...                 None   33.333333
+3         Medium         Mild  ...                 None   33.333333
+4         Medium     Moderate  ...                 None   33.333333
+5         Medium         Cold  ...                 None    0.000000
+6           Good         Mild  ...                 None    0.000000
+7           Good     Moderate  ...                 None    0.000000
+8           Good         Cold  ...                 None    0.000000
+
+[9 rows x 7 columns]
+2025-12-11 11:53:08,419 - INFO - 
+Division Summary:
+             division abbr  ...      mean_npv  is_viable
+0         New England   NE  ... -21171.442183      False
+1     Middle Atlantic   MA  ... -21171.442183      False
+2  East North Central  ENC  ... -21171.442183      False
+3  West North Central  WNC  ... -21171.442183      False
+4      South Atlantic   SA  ... -21167.185221      False
+5  East South Central  ESC  ... -21167.746989      False
+6  West South Central  WSC  ... -21167.185221      False
+7      Mountain North  MtN  ... -21171.442183      False
+8      Mountain South  MtS  ... -21167.746989      False
+9             Pacific  PAC  ... -21167.746989      False
+
+[10 rows x 7 columns]
+2025-12-11 11:53:08,419 - INFO - 
+--- Summary Statistics ---
+2025-12-11 11:53:08,419 - INFO - Mean NPV: $-21,169
+2025-12-11 11:53:08,419 - INFO - Mean Viability: 0.33
+2025-12-11 11:53:08,419 - INFO - Viable scenarios: 72 / 324
+2025-12-11 11:53:08,424 - INFO - Saved scenario results to /workspace/heat_pump_retrofit/output
+2025-12-11 11:53:08,424 - INFO - 
+✅ Phase 6 Complete
+2025-12-11 11:53:08,424 - INFO - 
+✅ Phase 6 completed in 0.0s
+2025-12-11 11:53:08,424 - INFO - 
+======================================================================
+2025-12-11 11:53:08,424 - INFO - PHASE 7: VISUALIZATION
+2025-12-11 11:53:08,424 - INFO - ======================================================================
+2025-12-11 11:53:08,666 - INFO - ============================================================
+2025-12-11 11:53:08,666 - INFO - PHASE 7: VISUALIZATION FOR JOURNAL/THESIS
+2025-12-11 11:53:08,666 - INFO - ============================================================
+2025-12-11 11:53:08,666 - INFO - ============================================================
+2025-12-11 11:53:08,666 - INFO - GENERATING PUBLICATION FIGURES
+2025-12-11 11:53:08,666 - INFO - ============================================================
+2025-12-11 11:53:09,213 - INFO -   ✓ fig01_workflow
+2025-12-11 11:53:09,839 - INFO -   ✓ fig09_viability_heatmaps
+2025-12-11 11:53:10,176 - INFO -   ✓ fig16_monte_carlo
+2025-12-11 11:53:10,806 - INFO -   ✓ fig17_sobol
+2025-12-11 11:53:11,266 - INFO -   ✓ fig10_us_map
+2025-12-11 11:53:11,266 - INFO - 
+✅ All figures generated
+2025-12-11 11:53:11,266 - INFO -    Saved to: /workspace/heat_pump_retrofit/figures_revised
+2025-12-11 11:53:11,266 - INFO - 
+✅ Phase 7 Complete
+2025-12-11 11:53:11,266 - INFO -    Figures saved to: /workspace/heat_pump_retrofit/figures_revised
+2025-12-11 11:53:11,266 - INFO -    Formats: ['png', 'pdf']
+2025-12-11 11:53:11,266 - INFO -    Resolution: 300 DPI
+2025-12-11 11:53:11,266 - INFO - 
+✅ Phase 7 completed in 2.8s
+2025-12-11 11:53:11,266 - INFO - 
+======================================================================
+2025-12-11 11:53:11,266 - INFO - PIPELINE SUMMARY
+2025-12-11 11:53:11,266 - INFO - ======================================================================
+2025-12-11 11:53:11,266 - INFO -   ✅ Phase 1: Literature Review - SUCCESS
+2025-12-11 11:53:11,266 - INFO -   ✅ Phase 2: Data Collection - SUCCESS
+2025-12-11 11:53:11,266 - INFO -   ❌ Phase 3: Feature Engineering - FAILED
+2025-12-11 11:53:11,266 - INFO -   ❌ Phase 4: Model Training - FAILED
+2025-12-11 11:53:11,266 - INFO -   ❌ Phase 5: Sensitivity Analysis - FAILED
+2025-12-11 11:53:11,266 - INFO -   ✅ Phase 6: Scenario Evaluation - SUCCESS
+2025-12-11 11:53:11,266 - INFO -   ✅ Phase 7: Visualization - SUCCESS
+2025-12-11 11:53:11,266 - INFO - 
+Total time: 4.1s (0.1 min)
+2025-12-11 11:53:11,266 - INFO - Output directory: /workspace/heat_pump_retrofit/output
+2025-12-11 11:53:11,266 - INFO - Figures directory: /workspace/heat_pump_retrofit/figures_revised
+2025-12-11 11:53:11,266 - INFO - 
+Outputs generated:
+2025-12-11 11:53:11,266 - INFO -   - Data files: 9
+2025-12-11 11:53:11,266 - INFO -   - Figures: 31
+2025-12-11 11:53:11,266 - INFO - 
+======================================================================
+2025-12-11 11:53:11,267 - INFO - PIPELINE COMPLETE
+2025-12-11 11:53:11,267 - INFO - ======================================================================
+2025-12-11 11:53:31,196 - INFO - ======================================================================
+2025-12-11 11:53:31,197 - INFO - HEAT PUMP RETROFIT ANALYSIS PIPELINE
+2025-12-11 11:53:31,197 - INFO - Started: 2025-12-11 11:53:31
+2025-12-11 11:53:31,197 - INFO - Random Seed: 42
+2025-12-11 11:53:31,197 - INFO - ======================================================================
+2025-12-11 11:53:31,197 - INFO - 
+======================================================================
+2025-12-11 11:53:31,197 - INFO - PHASE 3: FEATURE ENGINEERING
+2025-12-11 11:53:31,197 - INFO - ======================================================================
+2025-12-11 11:53:31,687 - INFO - ============================================================
+2025-12-11 11:53:31,687 - INFO - PHASE 3: DATA PROCESSING AND FEATURE ENGINEERING
+2025-12-11 11:53:31,687 - INFO - ============================================================
+2025-12-11 11:53:31,800 - INFO - Loaded 9,387 records from /workspace/heat_pump_retrofit/output/03_gas_heated_clean.csv
+2025-12-11 11:53:31,807 - INFO - Outlier removal: 9,387 -> 8,837 (550 removed)
+2025-12-11 11:53:31,808 - INFO - Creating derived features...
+2025-12-11 11:53:31,812 - INFO - Created features. Total columns: 153
+2025-12-11 11:53:31,812 - INFO - Using 10 features: ['HDD65', 'log_sqft', 'building_age', 'envelope_score', 'hdd_sqft', 'age_hdd', 'sqft_per_hdd', 'hdd_squared', 'envelope_class_encoded', 'climate_zone_encoded']
+2025-12-11 11:53:31,818 - WARNING - Target 'thermal_intensity' not found, using synthetic target
+2025-12-11 11:53:31,821 - INFO - Splitting data: 60%/20%/20%
+2025-12-11 11:53:31,823 - INFO - Train: 5,302, Val: 1,767, Test: 1,768
+2025-12-11 11:53:32,434 - INFO - Saved all processed data to /workspace/heat_pump_retrofit/output
+2025-12-11 11:53:32,434 - INFO - 
+✅ Phase 3 Complete
+2025-12-11 11:53:32,434 - INFO -    Features: 13
+2025-12-11 11:53:32,434 - INFO -    Train/Val/Test: 5302/1767/1768
+2025-12-11 11:53:32,434 - INFO - 
+✅ Phase 3 completed in 1.2s
+2025-12-11 11:53:32,434 - INFO - 
+======================================================================
+2025-12-11 11:53:32,434 - INFO - PHASE 4: MODEL TRAINING
+2025-12-11 11:53:32,434 - INFO - ======================================================================
+2025-12-11 11:53:32,485 - INFO - ============================================================
+2025-12-11 11:53:32,485 - INFO - PHASE 4: MODELING AND CROSS-VALIDATION
+2025-12-11 11:53:32,485 - INFO - ============================================================
+2025-12-11 11:53:32,494 - INFO - Loaded splits: Train=5302, Val=1767, Test=1768
+2025-12-11 11:53:32,494 - INFO - 
+--- Training OLS ---
+2025-12-11 11:53:32,528 - INFO - OLS: R²=-0.003, RMSE=0.00256
+2025-12-11 11:53:32,528 - INFO - 
+--- Training Random Forest ---
+2025-12-11 11:53:39,707 - INFO - RF: R²=-0.020, RMSE=0.00258
+2025-12-11 11:53:39,708 - INFO - 
+--- Training XGBoost ---
+2025-12-11 11:53:40,023 - INFO - XGBoost: R²=-0.002, RMSE=0.00256
+2025-12-11 11:53:40,029 - INFO - 
+Top 5 Features (XGBoost):
+          feature  importance
+0           HDD65         0.0
+1        log_sqft         0.0
+2    building_age         0.0
+3  envelope_score         0.0
+4        hdd_sqft         0.0
+2025-12-11 11:53:40,053 - INFO - Saved: /workspace/heat_pump_retrofit/models/ols_model.pkl
+2025-12-11 11:53:40,062 - INFO - Saved: /workspace/heat_pump_retrofit/models/random_forest_model.pkl
+2025-12-11 11:53:40,063 - INFO - Saved: /workspace/heat_pump_retrofit/models/xgboost_model.pkl
+2025-12-11 11:53:40,064 - INFO - Saved: /workspace/heat_pump_retrofit/output/model_comparison.csv
+2025-12-11 11:53:40,064 - INFO - 
+✅ Phase 4 Complete
+2025-12-11 11:53:40,065 - INFO - 
+Model Comparison:
+       model  train_r2   test_r2  test_rmse  test_mae  cv_r2_mean  cv_r2_std
+         OLS  0.002103 -0.003087   0.002559  0.002199   -0.003834   0.005967
+RandomForest  0.175305 -0.020295   0.002581  0.002210   -0.015049   0.006745
+     XGBoost -0.000004 -0.002279   0.002558  0.002195   -0.000247   0.000245
+2025-12-11 11:53:40,065 - INFO - 
+🏆 Best Model: XGBoost
+2025-12-11 11:53:40,065 - INFO - 
+✅ Phase 4 completed in 7.6s
+2025-12-11 11:53:40,065 - INFO - 
+======================================================================
+2025-12-11 11:53:40,065 - INFO - PHASE 5: SENSITIVITY ANALYSIS
+2025-12-11 11:53:40,065 - INFO - ======================================================================
+2025-12-11 11:53:40,527 - INFO - ============================================================
+2025-12-11 11:53:40,527 - INFO - PHASE 5: INTERPRETABILITY AND SENSITIVITY ANALYSIS
+2025-12-11 11:53:40,527 - INFO - ============================================================
+2025-12-11 11:53:40,534 - INFO - Loaded model: /workspace/heat_pump_retrofit/models/xgboost_model.pkl
+2025-12-11 11:53:40,538 - INFO - 
+--- SHAP Analysis ---
+2025-12-11 11:53:40,538 - INFO - Computing SHAP values for 500 samples...
+2025-12-11 11:53:40,599 - INFO - 
+SHAP Feature Importance:
+                  feature  mean_abs_shap
+0                   HDD65            0.0
+1                log_sqft            0.0
+2            building_age            0.0
+3          envelope_score            0.0
+4                hdd_sqft            0.0
+5                 age_hdd            0.0
+6            sqft_per_hdd            0.0
+7             hdd_squared            0.0
+8  envelope_class_encoded            0.0
+9    climate_zone_encoded            0.0
+2025-12-11 11:53:40,599 - INFO - 
+--- Monte Carlo Simulation ---
+2025-12-11 11:53:40,599 - INFO - Running Monte Carlo simulation with 10000 samples...
+2025-12-11 11:53:40,821 - INFO - NPV Summary: Mean=$-14,555, P(NPV>0)=0.0%
+2025-12-11 11:53:40,822 - INFO - 
+--- Sobol Sensitivity Analysis ---
+2025-12-11 11:53:40,822 - INFO - Computing Sobol sensitivity indices...
+2025-12-11 11:53:40,829 - INFO - Top 3 Sensitive Parameters:
+       parameter        S1        ST
+5  Retrofit_Cost  0.265114  0.344648
+4        HP_Cost  0.259403  0.337224
+0     Elec_Price  0.236954  0.308040
+2025-12-11 11:53:40,903 - INFO - Saved analysis results to /workspace/heat_pump_retrofit/output
+2025-12-11 11:53:40,903 - INFO - 
+✅ Phase 5 Complete
+2025-12-11 11:53:40,903 - INFO -    SHAP: Top feature = HDD65
+2025-12-11 11:53:40,903 - INFO -    MC: P(NPV>0) = 0.0%
+2025-12-11 11:53:40,903 - INFO -    Sobol: Top parameter = Retrofit_Cost
+2025-12-11 11:53:40,903 - INFO - 
+✅ Phase 5 completed in 0.8s
+2025-12-11 11:53:40,903 - INFO - 
+======================================================================
+2025-12-11 11:53:40,903 - INFO - PHASE 6: SCENARIO EVALUATION
+2025-12-11 11:53:40,903 - INFO - ======================================================================
+2025-12-11 11:53:40,904 - INFO - ============================================================
+2025-12-11 11:53:40,904 - INFO - PHASE 6: SCENARIO ENUMERATION AND ECONOMIC EVALUATION
+2025-12-11 11:53:40,904 - INFO - ============================================================
+2025-12-11 11:53:40,904 - INFO - Generated 324 scenarios
+2025-12-11 11:53:40,904 - INFO - Evaluating all scenarios...
+2025-12-11 11:53:40,920 - INFO - Evaluated 324 scenarios
+2025-12-11 11:53:40,920 - INFO - Viable scenarios: 72 (22.2%)
+2025-12-11 11:53:40,920 - INFO - Finding tipping points...
+2025-12-11 11:53:40,930 - INFO - 
+Tipping Points:
+  envelope_class climate_zone  ...  break_even_scenario  pct_viable
+0           Poor         Mild  ...                 None   66.666667
+1           Poor     Moderate  ...                 None   33.333333
+2           Poor         Cold  ...                 None   33.333333
+3         Medium         Mild  ...                 None   33.333333
+4         Medium     Moderate  ...                 None   33.333333
+5         Medium         Cold  ...                 None    0.000000
+6           Good         Mild  ...                 None    0.000000
+7           Good     Moderate  ...                 None    0.000000
+8           Good         Cold  ...                 None    0.000000
+
+[9 rows x 7 columns]
+2025-12-11 11:53:40,936 - INFO - 
+Division Summary:
+             division abbr  ...      mean_npv  is_viable
+0         New England   NE  ... -21171.442183      False
+1     Middle Atlantic   MA  ... -21171.442183      False
+2  East North Central  ENC  ... -21171.442183      False
+3  West North Central  WNC  ... -21171.442183      False
+4      South Atlantic   SA  ... -21167.185221      False
+5  East South Central  ESC  ... -21167.746989      False
+6  West South Central  WSC  ... -21167.185221      False
+7      Mountain North  MtN  ... -21171.442183      False
+8      Mountain South  MtS  ... -21167.746989      False
+9             Pacific  PAC  ... -21167.746989      False
+
+[10 rows x 7 columns]
+2025-12-11 11:53:40,936 - INFO - 
+--- Summary Statistics ---
+2025-12-11 11:53:40,936 - INFO - Mean NPV: $-21,169
+2025-12-11 11:53:40,936 - INFO - Mean Viability: 0.33
+2025-12-11 11:53:40,936 - INFO - Viable scenarios: 72 / 324
+2025-12-11 11:53:40,941 - INFO - Saved scenario results to /workspace/heat_pump_retrofit/output
+2025-12-11 11:53:40,941 - INFO - 
+✅ Phase 6 Complete
+2025-12-11 11:53:40,941 - INFO - 
+✅ Phase 6 completed in 0.0s
+2025-12-11 11:53:40,941 - INFO - 
+======================================================================
+2025-12-11 11:53:40,941 - INFO - PHASE 7: VISUALIZATION
+2025-12-11 11:53:40,941 - INFO - ======================================================================
+2025-12-11 11:53:40,962 - INFO - ============================================================
+2025-12-11 11:53:40,962 - INFO - PHASE 7: VISUALIZATION FOR JOURNAL/THESIS
+2025-12-11 11:53:40,962 - INFO - ============================================================
+2025-12-11 11:53:40,962 - INFO - ============================================================
+2025-12-11 11:53:40,962 - INFO - GENERATING PUBLICATION FIGURES
+2025-12-11 11:53:40,962 - INFO - ============================================================
+2025-12-11 11:53:41,574 - INFO -   ✓ fig01_workflow
+2025-12-11 11:53:42,191 - INFO -   ✓ fig09_viability_heatmaps
+2025-12-11 11:53:42,533 - INFO -   ✓ fig16_monte_carlo
+2025-12-11 11:53:43,200 - INFO -   ✓ fig17_sobol
+2025-12-11 11:53:43,687 - INFO -   ✓ fig10_us_map
+2025-12-11 11:53:43,687 - INFO - 
+✅ All figures generated
+2025-12-11 11:53:43,687 - INFO -    Saved to: /workspace/heat_pump_retrofit/figures_revised
+2025-12-11 11:53:43,687 - INFO - 
+✅ Phase 7 Complete
+2025-12-11 11:53:43,687 - INFO -    Figures saved to: /workspace/heat_pump_retrofit/figures_revised
+2025-12-11 11:53:43,687 - INFO -    Formats: ['png', 'pdf']
+2025-12-11 11:53:43,687 - INFO -    Resolution: 300 DPI
+2025-12-11 11:53:43,687 - INFO - 
+✅ Phase 7 completed in 2.7s
+2025-12-11 11:53:43,687 - INFO - 
+======================================================================
+2025-12-11 11:53:43,687 - INFO - PIPELINE SUMMARY
+2025-12-11 11:53:43,687 - INFO - ======================================================================
+2025-12-11 11:53:43,687 - INFO -   ✅ Phase 3: Feature Engineering - SUCCESS
+2025-12-11 11:53:43,687 - INFO -   ✅ Phase 4: Model Training - SUCCESS
+2025-12-11 11:53:43,687 - INFO -   ✅ Phase 5: Sensitivity Analysis - SUCCESS
+2025-12-11 11:53:43,687 - INFO -   ✅ Phase 6: Scenario Evaluation - SUCCESS
+2025-12-11 11:53:43,687 - INFO -   ✅ Phase 7: Visualization - SUCCESS
+2025-12-11 11:53:43,687 - INFO - 
+Total time: 12.5s (0.2 min)
+2025-12-11 11:53:43,687 - INFO - Output directory: /workspace/heat_pump_retrofit/output
+2025-12-11 11:53:43,687 - INFO - Figures directory: /workspace/heat_pump_retrofit/figures_revised
+2025-12-11 11:53:43,688 - INFO - 
+Outputs generated:
+2025-12-11 11:53:43,688 - INFO -   - Data files: 24
+2025-12-11 11:53:43,688 - INFO -   - Figures: 31
+2025-12-11 11:53:43,688 - INFO - 
+======================================================================
+2025-12-11 11:53:43,688 - INFO - PIPELINE COMPLETE
+2025-12-11 11:53:43,688 - INFO - ======================================================================

@@ -1,0 +1,103 @@
+
+================================================================================
+HEAT PUMP VIABILITY ANALYSIS FOR U.S. GAS-HEATED RESIDENTIAL BUILDINGS
+Problem Statement and Research Objectives
+================================================================================
+Generated: 2025-12-11 11:53
+
+1. PROBLEM STATEMENT
+--------------------
+The U.S. residential sector accounts for approximately 20% of national energy 
+consumption and associated greenhouse gas emissions. Natural gas furnaces remain
+the dominant heating technology in ~48% of American homes, presenting both a 
+challenge and an opportunity for decarbonization. Heat pumps (HPs) offer a 
+promising pathway to reduce emissions, but their economic viability varies 
+significantly across:
+
+  • Climate conditions (Heating Degree Days, HDD)
+  • Building envelope quality (insulation, air sealing)
+  • Regional energy prices (electricity vs. natural gas)
+  • Grid carbon intensity (current and projected)
+
+This study addresses the critical question: Under what conditions is heat pump
+adoption economically viable for gas-heated U.S. homes, and how do these 
+conditions vary across climate zones and building characteristics?
+
+2. RESEARCH OBJECTIVES
+----------------------
+Primary Objectives:
+  1. Develop a machine learning model (XGBoost) to predict thermal intensity
+     (BTU/sqft/HDD) for gas-heated homes using RECS 2020 microdata.
+  
+  2. Identify key drivers of heating energy consumption through SHAP analysis.
+  
+  3. Calculate Net Present Value (NPV) of HP adoption under various scenarios.
+  
+  4. Determine "tipping points" where HP adoption becomes economically viable.
+  
+  5. Quantify sensitivity to grid decarbonization scenarios through 2050.
+
+Secondary Objectives:
+  • Validate model against official RECS statistics
+  • Perform global sensitivity analysis (Sobol indices)
+  • Quantify uncertainty through Monte Carlo simulation
+  • Develop policy recommendations for incentive targeting
+
+3. SCOPE AND BOUNDARIES
+-----------------------
+Included:
+  • Single-family and multi-family homes with natural gas heating
+  • Air-source heat pumps (ASHPs) including cold-climate variants
+  • Building envelope retrofits (insulation, air sealing, windows)
+  • 15-year analysis horizon with 5% discount rate
+  • Continental U.S. (9 Census divisions)
+
+Excluded:
+  • Ground-source heat pumps (higher cost, different economics)
+  • New construction (focus on retrofit market)
+  • Commercial buildings
+  • Hawaii and Alaska (different energy markets)
+
+4. KEY HYPOTHESES
+-----------------
+H1: HDD and envelope quality are the dominant predictors of HP viability.
+H2: Cold climate regions (HDD > 6,000) require envelope retrofit for viability.
+H3: Grid decarbonization shifts viability threshold by 2035.
+H4: NPV sensitivity is highest for electricity price and COP.
+
+5. EXPECTED CONTRIBUTIONS
+-------------------------
+Academic:
+  • Novel application of XGBoost + SHAP for residential energy modeling
+  • Comprehensive viability score framework linking ML to economics
+  • Uncertainty quantification through combined Sobol/Monte Carlo analysis
+
+Policy:
+  • Identification of priority regions for HP incentives
+  • Quantification of retrofit requirements for cold climates
+  • Evidence base for state energy office planning
+
+6. DATA SOURCES
+---------------
+Primary: RECS 2020 Microdata (EIA)
+  • n = 18,496 households, filtered to n = 9,411 gas-heated
+  • 24 variables covering building, climate, household characteristics
+
+Secondary:
+  • EIA Annual Energy Outlook (energy price projections)
+  • NREL Electrification Futures Study (technology costs)
+  • EPA eGRID (grid carbon intensity)
+
+7. LITERATURE GAP
+-----------------
+Existing studies (e.g., Deetjen et al. 2021, Buonocore et al. 2022) have:
+  ✓ Assessed HP emissions benefits
+  ✓ Analyzed aggregate adoption potential
+  
+Gap addressed by this study:
+  ✗ Household-level viability prediction with ML
+  ✗ Combined economic + emissions optimization
+  ✗ Explicit uncertainty quantification
+  ✗ Policy-actionable viability thresholds
+
+================================================================================
