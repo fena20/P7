@@ -442,6 +442,233 @@ class TabularEmbeddingRegressor:
         joblib.dump(payload, path)
 
 
+class SimpleLSTMRegressor:
+    """Single-timestep LSTM-style regressor implemented with NumPy."""
+
+    def __init__(
+        self,
+        input_dim: int,
+        hidden_dim: int = 128,
+        lr: float = 1e-3,
+        weight_decay: float = 1e-5,
+        batch_size: int = 256,
+        epochs: int = 60,
+        patience: int = 8,
+        random_state: int = 42,
+    ) -> None:
+        self.input_dim = input_dim
+        self.hidden_dim = hidden_dim
+        self.lr = lr
+        self.weight_decay = weight_decay
+        self.batch_size = batch_size
+        self.epochs = epochs
+        self.patience = patience
+        self.random_state = random_state
+
+        self.W_x: np.ndarray | None = None
+        self.W_h: np.ndarray | None = None
+        self.b: np.ndarray | None = None
+        self.W_out: np.ndarray | None = None
+        self.b_out: np.ndarray | None = None
+        self.x_mean: np.ndarray | None = None
+        self.x_std: np.ndarray | None = None
+        self.target_mean: float | None = None
+        self.target_std: float | None = None
+
+    @staticmethod
+    def _sigmoid(x: np.ndarray) -> np.ndarray:
+        return 1 / (1 + np.exp(-x))
+
+    def _initialize_params(self) -> None:
+        rng = np.random.default_rng(self.random_state)
+        limit = np.sqrt(1 / max(1, self.input_dim))
+        self.W_x = rng.uniform(-limit, limit, size=(self.input_dim, 4 * self.hidden_dim)).astype(np.float32)
+        self.W_h = rng.uniform(-limit, limit, size=(self.hidden_dim, 4 * self.hidden_dim)).astype(np.float32)
+        self.b = np.zeros((1, 4 * self.hidden_dim), dtype=np.float32)
+        self.W_out = rng.uniform(-limit, limit, size=(self.hidden_dim, 1)).astype(np.float32)
+        self.b_out = np.zeros((1, 1), dtype=np.float32)
+
+    def _forward(self, x_batch: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+        assert self.W_x is not None and self.W_h is not None and self.b is not None
+        assert self.W_out is not None and self.b_out is not None
+
+        h_prev = np.zeros((len(x_batch), self.hidden_dim), dtype=np.float32)
+        c_prev = np.zeros_like(h_prev)
+
+        z = x_batch @ self.W_x + h_prev @ self.W_h + self.b
+        i = self._sigmoid(z[:, : self.hidden_dim])
+        f = self._sigmoid(z[:, self.hidden_dim : 2 * self.hidden_dim])
+        g = np.tanh(z[:, 2 * self.hidden_dim : 3 * self.hidden_dim])
+        o = self._sigmoid(z[:, 3 * self.hidden_dim :])
+
+        c = f * c_prev + i * g
+        h = o * np.tanh(c)
+        y_hat = h @ self.W_out + self.b_out
+        return y_hat, h, c, (i, f, g, o), z
+
+    def _loss_and_grads(
+        self,
+        x_batch: np.ndarray,
+        y_batch: np.ndarray,
+        sample_weight: np.ndarray | None,
+    ) -> Tuple[float, Tuple[np.ndarray, ...]]:
+        y_pred, h, c, gates, z = self._forward(x_batch)
+        i, f, g, o = gates
+
+        if sample_weight is not None:
+            weight_sum = np.sum(sample_weight) + 1e-6
+            grad_y = 2 * (y_pred - y_batch) * (sample_weight / weight_sum)
+            loss = float(np.sum(sample_weight * (y_pred - y_batch) ** 2) / weight_sum)
+        else:
+            grad_y = 2 * (y_pred - y_batch) / len(y_batch)
+            loss = float(np.mean((y_pred - y_batch) ** 2))
+
+        grad_W_out = h.T @ grad_y + self.weight_decay * (self.W_out if self.W_out is not None else 0)
+        grad_b_out = np.sum(grad_y, axis=0, keepdims=True)
+        grad_h = grad_y @ self.W_out.T
+
+        tanh_c = np.tanh(c)
+        grad_o = grad_h * tanh_c
+        grad_c = grad_h * o * (1 - tanh_c**2)
+        grad_f = grad_c * np.zeros_like(c)  # c_prev is zeros
+        grad_i = grad_c * g
+        grad_g = grad_c * i
+
+        grad_z_i = grad_i * i * (1 - i)
+        grad_z_f = grad_f * f * (1 - f)
+        grad_z_o = grad_o * o * (1 - o)
+        grad_z_g = grad_g * (1 - g**2)
+
+        grad_z = np.concatenate([grad_z_i, grad_z_f, grad_z_g, grad_z_o], axis=1)
+
+        grad_W_x = x_batch.T @ grad_z + self.weight_decay * (self.W_x if self.W_x is not None else 0)
+        grad_W_h = np.zeros_like(self.W_h)
+        grad_b = np.sum(grad_z, axis=0, keepdims=True)
+
+        return loss, (grad_W_x, grad_W_h, grad_b, grad_W_out, grad_b_out)
+
+    def fit_with_validation(
+        self,
+        X_train: pd.DataFrame,
+        y_train: pd.Series,
+        X_val: pd.DataFrame,
+        y_val: pd.Series,
+        sample_weight: np.ndarray | None = None,
+        val_sample_weight: np.ndarray | None = None,
+    ) -> "SimpleLSTMRegressor":
+        train_array = X_train.values.astype(np.float32)
+        val_array = X_val.values.astype(np.float32)
+
+        self.x_mean = train_array.mean(axis=0)
+        self.x_std = train_array.std(axis=0) + 1e-6
+        train_array = (train_array - self.x_mean) / self.x_std
+        val_array = (val_array - self.x_mean) / self.x_std
+
+        y_train_arr = y_train.values.astype(np.float32).reshape(-1, 1)
+        y_val_arr = y_val.values.astype(np.float32).reshape(-1, 1)
+        self.target_mean = float(y_train_arr.mean())
+        self.target_std = float(y_train_arr.std() + 1e-6)
+        y_train_arr = (y_train_arr - self.target_mean) / self.target_std
+        y_val_arr = (y_val_arr - self.target_mean) / self.target_std
+
+        self._initialize_params()
+        rng = np.random.default_rng(self.random_state)
+
+        best_val = float("inf")
+        best_params: Tuple[np.ndarray, ...] | None = None
+        epochs_no_improve = 0
+
+        for epoch in range(self.epochs):
+            indices = rng.permutation(len(train_array))
+            batch_losses = []
+            for start in range(0, len(train_array), self.batch_size):
+                end = start + self.batch_size
+                batch_idx = indices[start:end]
+                x_batch = train_array[batch_idx]
+                y_batch = y_train_arr[batch_idx]
+                sw_batch = sample_weight[batch_idx].reshape(-1, 1) if sample_weight is not None else None
+
+                loss, grads = self._loss_and_grads(x_batch, y_batch, sw_batch)
+                batch_losses.append(loss)
+                grad_W_x, grad_W_h, grad_b, grad_W_out, grad_b_out = grads
+
+                assert self.W_x is not None and self.W_h is not None
+                assert self.W_out is not None and self.b_out is not None and self.b is not None
+
+                self.W_x -= self.lr * grad_W_x
+                self.W_h -= self.lr * grad_W_h
+                self.b -= self.lr * grad_b
+                self.W_out -= self.lr * grad_W_out
+                self.b_out -= self.lr * grad_b_out
+
+            # Validation loss
+            val_pred, _, _, _, _ = self._forward(val_array)
+            if val_sample_weight is not None:
+                weight_sum = np.sum(val_sample_weight) + 1e-6
+                val_loss = float(
+                    np.sum(val_sample_weight.reshape(-1, 1) * (val_pred - y_val_arr) ** 2) / weight_sum
+                )
+            else:
+                val_loss = float(np.mean((val_pred - y_val_arr) ** 2))
+
+            logger.info(
+                "LSTM epoch %d — train loss: %.5f, val loss: %.5f",
+                epoch + 1,
+                float(np.mean(batch_losses)),
+                val_loss,
+            )
+
+            if val_loss + 1e-6 < best_val:
+                best_val = val_loss
+                best_params = (
+                    self.W_x.copy(),
+                    self.W_h.copy(),
+                    self.b.copy(),
+                    self.W_out.copy(),
+                    self.b_out.copy(),
+                )
+                epochs_no_improve = 0
+            else:
+                epochs_no_improve += 1
+                if epochs_no_improve >= self.patience:
+                    logger.info("Early stopping LSTM after %d epochs without improvement.", epochs_no_improve)
+                    break
+
+        if best_params is not None:
+            self.W_x, self.W_h, self.b, self.W_out, self.b_out = best_params
+        return self
+
+    def predict(self, X: pd.DataFrame, training_mode: bool = False) -> np.ndarray:
+        if any(param is None for param in (self.W_x, self.W_h, self.b, self.W_out, self.b_out)):
+            raise ValueError("Model has not been trained yet.")
+        assert self.x_mean is not None and self.x_std is not None
+
+        x_array = (X.values.astype(np.float32) - self.x_mean) / self.x_std
+        y_pred, _, _, _, _ = self._forward(x_array)
+        preds = y_pred.squeeze()
+        if not training_mode and self.target_mean is not None and self.target_std is not None:
+            preds = preds * self.target_std + self.target_mean
+        return preds.astype(float)
+
+    def save(self, path: Path) -> None:
+        import joblib
+
+        payload = {
+            "W_x": self.W_x,
+            "W_h": self.W_h,
+            "b": self.b,
+            "W_out": self.W_out,
+            "b_out": self.b_out,
+            "x_mean": self.x_mean,
+            "x_std": self.x_std,
+            "target_mean": self.target_mean,
+            "target_std": self.target_std,
+            "input_dim": self.input_dim,
+            "hidden_dim": self.hidden_dim,
+        }
+        joblib.dump(payload, path)
+
+
 def build_models(
     categorical_cols: List[str],
     continuous_cols: List[str],
@@ -477,6 +704,16 @@ def build_models(
             hidden_dims=(192, 96, 48),
             lr=8e-4,
             weight_decay=2e-5,
+            batch_size=256,
+            epochs=80,
+            patience=10,
+            random_state=42,
+        ),
+        "SimpleLSTM": SimpleLSTMRegressor(
+            input_dim=X.shape[1],
+            hidden_dim=160,
+            lr=8e-4,
+            weight_decay=1e-5,
             batch_size=256,
             epochs=80,
             patience=10,
