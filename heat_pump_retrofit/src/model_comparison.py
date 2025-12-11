@@ -212,6 +212,7 @@ class TabularEmbeddingRegressor:
         embedding_sizes: Dict[str, Tuple[int, int]],
         hidden_dims: Tuple[int, ...] = (128, 64),
         lr: float = 1e-3,
+        weight_decay: float = 1e-5,
         batch_size: int = 256,
         epochs: int = 50,
         patience: int = 5,
@@ -222,6 +223,7 @@ class TabularEmbeddingRegressor:
         self.embedding_sizes = embedding_sizes
         self.hidden_dims = hidden_dims
         self.lr = lr
+        self.weight_decay = weight_decay
         self.batch_size = batch_size
         self.epochs = epochs
         self.patience = patience
@@ -232,6 +234,8 @@ class TabularEmbeddingRegressor:
         self.biases: List[np.ndarray] = []
         self.cont_means: np.ndarray | None = None
         self.cont_stds: np.ndarray | None = None
+        self.target_mean: float | None = None
+        self.target_std: float | None = None
 
         rng = np.random.default_rng(self.random_state)
         for col, (cardinality, emb_dim) in self.embedding_sizes.items():
@@ -286,6 +290,11 @@ class TabularEmbeddingRegressor:
 
         y_train_array = y_train.values.astype(np.float32).reshape(-1, 1)
         y_val_array = y_val.values.astype(np.float32).reshape(-1, 1)
+
+        self.target_mean = float(y_train_array.mean())
+        self.target_std = float(y_train_array.std() + 1e-6)
+        y_train_array = (y_train_array - self.target_mean) / self.target_std
+        y_val_array = (y_val_array - self.target_mean) / self.target_std
 
         best_val_loss = float("inf")
         best_state: Tuple[Dict[str, np.ndarray], List[np.ndarray], List[np.ndarray]] | None = None
@@ -347,11 +356,13 @@ class TabularEmbeddingRegressor:
                     grad_slice = delta_input[:, offset : offset + emb_dim]
                     grad_matrix = np.zeros_like(self.embeddings[col])
                     np.add.at(grad_matrix, cats, grad_slice)
+                    grad_matrix += self.weight_decay * self.embeddings[col]
                     self.embeddings[col] -= self.lr * grad_matrix / len(batch_idx)
                     offset += emb_dim
 
                 # Update first layer inputs for continuous portion is handled via weight update
                 for i in range(len(self.weights)):
+                    grads_W[i] += self.weight_decay * self.weights[i]
                     self.weights[i] -= self.lr * grads_W[i]
                     self.biases[i] -= self.lr * grads_b[i]
 
@@ -409,6 +420,8 @@ class TabularEmbeddingRegressor:
             activation = self._relu(activation @ W + b)
         outputs = activation @ self.weights[-1] + self.biases[-1]
         preds = outputs.squeeze()
+        if not training_mode and self.target_mean is not None and self.target_std is not None:
+            preds = preds * self.target_std + self.target_mean
         return preds if training_mode else preds.astype(float)
 
     def save(self, path: Path) -> None:
@@ -420,6 +433,8 @@ class TabularEmbeddingRegressor:
             "biases": self.biases,
             "cont_means": self.cont_means,
             "cont_stds": self.cont_stds,
+            "target_mean": self.target_mean,
+            "target_std": self.target_std,
             "categorical_cols": self.categorical_cols,
             "continuous_cols": self.continuous_cols,
             "embedding_sizes": self.embedding_sizes,
@@ -441,39 +456,52 @@ def build_models(
 
     return {
         "XGBoost": xgb.XGBRegressor(
-            n_estimators=600,
-            max_depth=6,
+            n_estimators=500,
+            max_depth=5,
             learning_rate=0.05,
-            min_child_weight=10,
-            subsample=0.8,
-            colsample_bytree=0.8,
-            gamma=0.1,
-            reg_alpha=0.1,
-            reg_lambda=1.0,
+            min_child_weight=15,
+            subsample=0.85,
+            colsample_bytree=0.85,
+            gamma=0.15,
+            reg_alpha=0.15,
+            reg_lambda=1.5,
             random_state=42,
             n_jobs=-1,
-            early_stopping_rounds=50,
+            early_stopping_rounds=40,
+            eval_metric="rmse",
         ),
         "DeepEmbeddingNN": TabularEmbeddingRegressor(
             categorical_cols=categorical_cols,
             continuous_cols=continuous_cols,
             embedding_sizes=embedding_sizes,
-            hidden_dims=(256, 128, 64),
-            lr=1e-3,
+            hidden_dims=(192, 96, 48),
+            lr=8e-4,
+            weight_decay=2e-5,
             batch_size=256,
-            epochs=60,
-            patience=8,
+            epochs=80,
+            patience=10,
             random_state=42,
         ),
         "RandomForest": RandomForestRegressor(
-            n_estimators=400,
-            max_depth=None,
+            n_estimators=500,
+            max_depth=18,
+            min_samples_leaf=2,
+            max_features="sqrt",
             random_state=42,
             n_jobs=-1,
         ),
-        "GradientBoosting": GradientBoostingRegressor(random_state=42),
+        "GradientBoosting": GradientBoostingRegressor(
+            n_estimators=300,
+            learning_rate=0.05,
+            max_depth=3,
+            subsample=0.9,
+            random_state=42,
+        ),
         "ExtraTrees": ExtraTreesRegressor(
-            n_estimators=400,
+            n_estimators=500,
+            max_depth=20,
+            min_samples_leaf=2,
+            max_features="sqrt",
             random_state=42,
             n_jobs=-1,
         ),
@@ -551,8 +579,9 @@ def train_and_evaluate_models():
                 X_train,
                 y_train,
                 eval_set=[(X_val, y_val)],
+                sample_weight=w_train,
+                sample_weight_eval_set=[w_val] if w_val is not None else None,
                 verbose=False,
-                **fit_params,
             )
         else:
             model.fit(X_train, y_train, **fit_params)
