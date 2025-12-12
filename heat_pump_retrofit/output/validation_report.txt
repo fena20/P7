@@ -1,0 +1,15 @@
+DATA VALIDATION REPORT
+==================================================
+
+sample_size: 9387
+
+hdd_mean: 4692.761478640673
+
+hdd_std: 2075.787887893235
+
+envelope_distribution: {'medium': 0.590497496537765, 'good': 0.31948439330989664, 'poor': 0.09001811015233833}
+
+missing_values: {'heating_equip_age': 1842}
+
+division_counts: {'East North Central': 1474, 'Middle Atlantic': 1210, 'Pacific': 1204, 'West North Central': 1167, 'South Atlantic': 1100, 'Mountain North': 873, 'West South Central': 765, 'New England': 615, 'Mountain South': 492, 'East South Central': 487}
+

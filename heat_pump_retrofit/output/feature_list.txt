@@ -1,0 +1,13 @@
+HDD65
+log_sqft
+building_age
+envelope_score
+hdd_sqft
+age_hdd
+sqft_per_hdd
+hdd_squared
+envelope_class_encoded
+climate_zone_encoded
+TYPEHUQ
+ADQINSUL
+DRAFTY

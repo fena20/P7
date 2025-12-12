@@ -1,0 +1,14 @@
+feature,importance
+HDD65,0.0
+log_sqft,0.0
+building_age,0.0
+envelope_score,0.0
+hdd_sqft,0.0
+age_hdd,0.0
+sqft_per_hdd,0.0
+hdd_squared,0.0
+envelope_class_encoded,0.0
+climate_zone_encoded,0.0
+TYPEHUQ,0.0
+ADQINSUL,0.0
+DRAFTY,0.0
