@@ -1,0 +1,25 @@
+Envelope Class,HDD Band,Viable Price Threshold ($/kWh),Avg Emissions Reduction (kg),N Scenarios Evaluated
+poor,"1,500",,,7
+poor,"2,500",,,7
+poor,"3,500",,,7
+poor,"4,500",,,7
+poor,"5,500",,,7
+poor,"6,500",,,7
+poor,"7,500",,,7
+poor,"8,500",,,7
+medium,"1,500",,,7
+medium,"2,500",,,7
+medium,"3,500",,,7
+medium,"4,500",,,7
+medium,"5,500",,,7
+medium,"6,500",,,7
+medium,"7,500",,,7
+medium,"8,500",,,7
+good,"1,500",,,7
+good,"2,500",,,7
+good,"3,500",,,7
+good,"4,500",,,7
+good,"5,500",,,7
+good,"6,500",,,7
+good,"7,500",,,7
+good,"8,500",,,7
