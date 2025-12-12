@@ -41,19 +41,34 @@ RESULTS_DIR = PROJECT_ROOT / "results"
 os.makedirs(FIGURES_DIR, exist_ok=True)
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
-# Import from previous modules
+# Import from previous modules using importlib (since module name starts with number)
 import sys
+import importlib.util
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-try:
-    from retrofit_scenarios import (
-        RETROFIT_MEASURES, HEAT_PUMP_OPTIONS,
-        EnergyPrices, GridEmissionFactor, GRID_EMISSIONS,
-        evaluate_scenario
+def import_retrofit_scenarios():
+    """Import 05_retrofit_scenarios module dynamically."""
+    spec = importlib.util.spec_from_file_location(
+        "retrofit_scenarios", 
+        PROJECT_ROOT / "src" / "05_retrofit_scenarios.py"
     )
-except ImportError:
-    # Define locally if import fails
-    pass
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+# Try to import
+try:
+    _retrofit_module = import_retrofit_scenarios()
+    RETROFIT_MEASURES = _retrofit_module.RETROFIT_MEASURES
+    HEAT_PUMP_OPTIONS = _retrofit_module.HEAT_PUMP_OPTIONS
+    EnergyPrices = _retrofit_module.EnergyPrices
+    GridEmissionFactor = _retrofit_module.GridEmissionFactor
+    GRID_EMISSIONS = _retrofit_module.GRID_EMISSIONS
+    evaluate_scenario = _retrofit_module.evaluate_scenario
+    _import_success = True
+except Exception as e:
+    logger.warning(f"Failed to import retrofit_scenarios: {e}")
+    _import_success = False
 
 
 @dataclass
@@ -127,11 +142,8 @@ def evaluate_tipping_point(
     
     Returns TippingPointResult with viability assessment.
     """
-    from src.retrofit_scenarios import (
-        RETROFIT_MEASURES, HEAT_PUMP_OPTIONS,
-        EnergyPrices, GridEmissionFactor,
-        evaluate_scenario
-    )
+    # Use globally imported modules
+    global RETROFIT_MEASURES, HEAT_PUMP_OPTIONS, EnergyPrices, GridEmissionFactor, evaluate_scenario
     
     prices = EnergyPrices(
         electricity_per_kwh=electricity_price,
@@ -342,7 +354,7 @@ def generate_figure9_heatmap(
         'econ_only': 0.5,
         'not_viable': 0
     }
-    viability_numeric = viability_pivot.applymap(lambda x: viability_map.get(x, 0))
+    viability_numeric = viability_pivot.map(lambda x: viability_map.get(x, 0))
     
     fig, axes = plt.subplots(1, 2, figsize=(14, 6))
     
